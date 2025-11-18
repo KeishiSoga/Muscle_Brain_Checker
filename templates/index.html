@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脳筋最強習慣アプリ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="catchphrase">身体を鍛え、脳を鍛え、周りを笑顔にする。<br>"脳筋最強"の新習慣アプリ。</h1>
+        </header>
+
+        <main>
+            <div class="checks-section">
+                <h2>今日の脳筋チェック</h2>
+                
+                <form id="checkForm" method="POST" action="{{ url_for('check') }}">
+                    <div class="check-item">
+                        <label>
+                            <input type="checkbox" 
+                                   id="exercise"
+                                   value="exercise"
+                                   {% if checks.exercise %}checked{% endif %}
+                                   onchange="updateAllChecks()">
+                            <span class="check-label">運動しましたか？</span>
+                            <span class="check-subtitle">（スクワット1回からでもOK）</span>
+                        </label>
+                    </div>
+
+                    <div class="check-item">
+                        <label>
+                            <input type="checkbox" 
+                                   id="study"
+                                   value="study"
+                                   {% if checks.study %}checked{% endif %}
+                                   onchange="updateAllChecks()">
+                            <span class="check-label">脳を鍛えましたか(勉強しましたか？)</span>
+                            <span class="check-subtitle">（読書でも2分学習でもOK）</span>
+                        </label>
+                    </div>
+
+                    <div class="check-item">
+                        <label>
+                            <input type="checkbox" 
+                                   id="challenge"
+                                   value="challenge"
+                                   {% if checks.challenge %}checked{% endif %}
+                                   onchange="updateAllChecks()">
+                            <span class="check-label">何か新しいことに挑戦していますか？</span>
+                            <span class="check-subtitle">（目標達成に向けた努力なら、何でもOK）</span>
+                        </label>
+                    </div>
+
+                    <div class="check-item">
+                        <label>
+                            <input type="checkbox" 
+                                   id="smile"
+                                   value="smile"
+                                   {% if checks.smile %}checked{% endif %}
+                                   onchange="updateAllChecks()">
+                            <span class="check-label">周りを笑顔にするようにユーモアを発揮しましたか？</span>
+                            <span class="check-subtitle">（挨拶、ありがとう、優しい言葉など）</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="result-section">
+                {% if count == 4 %}
+                    <div class="result result-max">
+                        <h2>最強！今日のあなたは無敵の脳筋戦士だ！</h2>
+                        <p>身体も脳もフル覚醒。周りまで元気にしてるぞ！</p>
+                        <div class="count-badge">4/4</div>
+                    </div>
+                {% elif count == 3 %}
+                    <div class="result result-good">
+                        <h2>あと一歩！ほぼ最強の脳筋だ！</h2>
+                        <p>明日はコンプリートして完全体になろう！</p>
+                        <div class="count-badge">3/4</div>
+                    </div>
+                {% elif count == 2 %}
+                    <div class="result result-ok">
+                        <h2>半分クリア！十分ナイス脳筋！</h2>
+                        <p>だが…まだ眠れる力があるはずだ。<br>明日はもう1つだけ増やしてみよう！</p>
+                        <div class="count-badge">2/4</div>
+                    </div>
+                {% elif count == 1 %}
+                    <div class="result result-min">
+                        <h2>今日はちょっと休憩日？それもOK！</h2>
+                        <p>だが、脳筋の炎はまだ消えていない。<br>明日は1つでいい、必ず積み上げよう！</p>
+                        <div class="count-badge">1/4</div>
+                    </div>
+                {% else %}
+                    <div class="result result-min">
+                        <h2>今日はまだまだこれから！</h2>
+                        <h2>筋肉を脳を鍛えてパワーアップだ！</h2>
+                        <p>最初の一歩を踏み出そう！<br>1つでもいい、今日から始めよう！</p>
+                        <div class="count-badge">0/4</div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="book-link-section">
+                <p class="book-link-text">最強の脳筋になるためのバイブルはこちら</p>
+                <a href="https://amzn.asia/d/dixGHZO" target="_blank" rel="noopener noreferrer" class="book-image-link">
+                    <img src="{{ url_for('static', filename='表紙.png') }}" 
+                         alt="脳筋 人生を変える無敵の生き方" 
+                         class="book-cover-image">
+                </a>
+                <a href="https://amzn.asia/d/dixGHZO" target="_blank" rel="noopener noreferrer" class="book-link-button">書籍を見る</a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function updateAllChecks() {
+            const form = document.getElementById('checkForm');
+            
+            // 既存のhidden inputを削除
+            const existingInputs = form.querySelectorAll('input[type="hidden"]');
+            existingInputs.forEach(input => input.remove());
+            
+            // すべてのチェックボックスの状態を送信
+            const checkboxes = ['exercise', 'study', 'challenge', 'smile'];
+            checkboxes.forEach(type => {
+                const checkbox = document.getElementById(type);
+                if (checkbox) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = type;
+                    input.value = checkbox.checked ? 'true' : 'false';
+                    form.appendChild(input);
+                }
+            });
+            
+            form.submit();
+        }
+    </script>
+</body>
+</html>
+

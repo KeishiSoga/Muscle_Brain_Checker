@@ -1,0 +1,258 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.catchphrase {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.6;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+main {
+    padding: 40px 30px;
+}
+
+.checks-section h2 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333;
+    text-align: center;
+    border-bottom: 3px solid #f5576c;
+    padding-bottom: 15px;
+}
+
+.check-item {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border-left: 5px solid #667eea;
+    transition: all 0.3s ease;
+}
+
+.check-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.check-item label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.check-item input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    margin-right: 15px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: #667eea;
+}
+
+.check-label {
+    font-weight: bold;
+    color: #333;
+    flex: 1;
+}
+
+.check-subtitle {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+    font-weight: normal;
+}
+
+.result-section {
+    margin-top: 40px;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.result {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result h2 {
+    font-size: 26px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.result p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.result-max {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.result-good {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.result-ok {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: #333;
+}
+
+.result-min {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: #333;
+}
+
+.count-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.result-min .count-badge,
+.result-ok .count-badge {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.book-link-section {
+    margin-top: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    text-align: center;
+}
+
+.book-link-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.book-image-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.book-image-link:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.book-cover-image {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    display: block;
+}
+
+.book-link-button {
+    display: inline-block;
+    background: white;
+    color: #667eea;
+    padding: 15px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.book-link-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: #f8f9fa;
+}
+
+.book-link-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+    .catchphrase {
+        font-size: 18px;
+    }
+    
+    .checks-section h2 {
+        font-size: 22px;
+    }
+    
+    .check-item label {
+        font-size: 16px;
+    }
+    
+    .result h2 {
+        font-size: 20px;
+    }
+    
+    .result p {
+        font-size: 16px;
+    }
+    
+    .book-link-text {
+        font-size: 18px;
+    }
+    
+    .book-link-button {
+        font-size: 16px;
+        padding: 12px 30px;
+    }
+    
+    .book-cover-image {
+        max-width: 250px;
+    }
+}
+

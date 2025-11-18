@@ -24,8 +24,10 @@
                                    value="exercise"
                                    {% if checks.exercise %}checked{% endif %}
                                    onchange="updateAllChecks()">
-                            <span class="check-label">運動しましたか？</span>
-                            <span class="check-subtitle">（スクワット1回からでもOK）</span>
+                            <div class="check-text-wrapper">
+                                <span class="check-label">運動しましたか？</span>
+                                <span class="check-subtitle">（スクワット1回からでもOK）</span>
+                            </div>
                         </label>
                     </div>
 
@@ -36,8 +38,10 @@
                                    value="study"
                                    {% if checks.study %}checked{% endif %}
                                    onchange="updateAllChecks()">
-                            <span class="check-label">脳を鍛えましたか(勉強しましたか？)</span>
-                            <span class="check-subtitle">（読書でも2分学習でもOK）</span>
+                            <div class="check-text-wrapper">
+                                <span class="check-label">脳を鍛えましたか(勉強しましたか？)</span>
+                                <span class="check-subtitle">（読書でも2分学習でもOK）</span>
+                            </div>
                         </label>
                     </div>
 
@@ -48,8 +52,10 @@
                                    value="challenge"
                                    {% if checks.challenge %}checked{% endif %}
                                    onchange="updateAllChecks()">
-                            <span class="check-label">何か新しいことに挑戦していますか？</span>
-                            <span class="check-subtitle">（目標達成に向けた努力なら、何でもOK）</span>
+                            <div class="check-text-wrapper">
+                                <span class="check-label">何か新しいことに挑戦していますか？</span>
+                                <span class="check-subtitle">（目標達成に向けた努力なら、何でもOK）</span>
+                            </div>
                         </label>
                     </div>
 
@@ -60,8 +66,10 @@
                                    value="smile"
                                    {% if checks.smile %}checked{% endif %}
                                    onchange="updateAllChecks()">
-                            <span class="check-label">周りを笑顔にするようにユーモアを発揮しましたか？</span>
-                            <span class="check-subtitle">（挨拶、ありがとう、優しい言葉など）</span>
+                            <div class="check-text-wrapper">
+                                <span class="check-label">周りを笑顔にするようにユーモアを発揮しましたか？</span>
+                                <span class="check-subtitle">（挨拶、ありがとう、優しい言葉など）</span>
+                            </div>
                         </label>
                     </div>
                 </form>

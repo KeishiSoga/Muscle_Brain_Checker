@@ -26,7 +26,7 @@
                                    onchange="updateAllChecks()">
                             <div class="check-text-wrapper">
                                 <span class="check-label">運動しましたか？</span>
-                                <span class="check-subtitle">（スクワット1回からでもOK）</span>
+                                <span class="check-subtitle">（まずは5分の運動から始めよう！）</span>
                             </div>
                         </label>
                     </div>
@@ -40,7 +40,7 @@
                                    onchange="updateAllChecks()">
                             <div class="check-text-wrapper">
                                 <span class="check-label">脳を鍛えましたか(勉強しましたか？)</span>
-                                <span class="check-subtitle">（読書でも2分学習でもOK）</span>
+                                <span class="check-subtitle">（読書でも5分の学習でもOK）</span>
                             </div>
                         </label>
                     </div>
@@ -67,8 +67,8 @@
                                    {% if checks.smile %}checked{% endif %}
                                    onchange="updateAllChecks()">
                             <div class="check-text-wrapper">
-                                <span class="check-label">周りを笑顔にするようにユーモアを発揮しましたか？</span>
-                                <span class="check-subtitle">（挨拶、ありがとう、優しい言葉など）</span>
+                                <span class="check-label">周りを笑顔にするようにしていますか？</span>
+                                <span class="check-subtitle">（挨拶、ありがとう、優しい言葉など）ユーモアを発揮するのもOK！</span>
                             </div>
                         </label>
                     </div>
@@ -78,14 +78,14 @@
             <div class="result-section">
                 {% if count == 4 %}
                     <div class="result result-max">
-                        <h2>最強！今日のあなたは無敵の脳筋戦士だ！</h2>
-                        <p>身体も脳もフル覚醒。周りまで元気にしてるぞ！</p>
+                        <h2>最強！今日のあなたは無敵の脳筋だ！</h2>
+                        <p>筋肉も脳も絶好調！。周りまで元気にしてるぞ！</p>
                         <div class="count-badge">4/4</div>
                     </div>
                 {% elif count == 3 %}
                     <div class="result result-good">
                         <h2>あと一歩！ほぼ最強の脳筋だ！</h2>
-                        <p>明日はコンプリートして完全体になろう！</p>
+                        <p>明日はコンプリートして最強の脳筋になろう！</p>
                         <div class="count-badge">3/4</div>
                     </div>
                 {% elif count == 2 %}
@@ -97,7 +97,7 @@
                 {% elif count == 1 %}
                     <div class="result result-min">
                         <h2>今日はちょっと休憩日？それもOK！</h2>
-                        <p>だが、脳筋の炎はまだ消えていない。<br>明日は1つでいい、必ず積み上げよう！</p>
+                        <p>だが、脳筋は常に君の味方。<br>明日は1つでいい、必ず積み上げよう！</p>
                         <div class="count-badge">1/4</div>
                     </div>
                 {% else %}

@@ -4,148 +4,320 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>脳筋最強習慣アプリ</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* スタイルは前回と同じものをベースに、保存ボタン関連を削除 */
+        :root {
+            --primary-color: #FF4B4B;
+            --muscle-bg: #FFF5F5;
+            --accent-color: #FFD700;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--muscle-bg);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .catchphrase {
+            font-family: 'Mochiy Pop One', sans-serif;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-shadow: 
+                3px 3px 0px #fff,
+                5px 5px 0px rgba(255, 75, 75, 0.3),
+                0 0 20px rgba(255, 75, 75, 0.5);
+            line-height: 1.4;
+            transform: perspective(500px) rotateX(2deg);
+        }
+
+        .progress-container {
+            background: #ddd;
+            border-radius: 20px;
+            height: 30px;
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #FF4B4B, #FF8E53);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .check-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .check-card {
+            background: white;
+            border: 3px solid #eee;
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            user-select: none; /* 連打しても文字選択されないように */
+        }
+
+        .check-card input[type="checkbox"] {
+            display: none;
+        }
+
+        .check-card:has(input:checked) {
+            border-color: var(--primary-color);
+            background-color: #FFF0F0;
+            transform: scale(1.02);
+            box-shadow: 0 8px 15px rgba(255, 75, 75, 0.2);
+        }
+
+        .check-card:has(input:checked)::after {
+            content: "💪";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+        }
+
+        .check-title {
+            display: block;
+            font-weight: 900;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .check-sub {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .result-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 4px solid var(--accent-color);
+            display: none;
+        }
+        
+        .result-section.active {
+            display: block;
+            animation: popUp 0.5s ease;
+        }
+
+        @keyframes popUp {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+
+        /* 保存中インジケーター（右下に小さく出す） */
+        #saveStatus {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: #888;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .book-link-section {
+            margin-top: 40px;
+            opacity: 0.9;
+        }
+        .book-cover-image {
+            max-width: 150px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        .book-cover-image:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1 class="catchphrase">身体を鍛え、脳を鍛え、周りを笑顔にする。<br>"脳筋最強"の新習慣アプリ。</h1>
+            <h1 class="catchphrase">身体を鍛え、脳を鍛え、<br>周りを笑顔にする。<br>"脳筋最強"の新習慣。</h1>
         </header>
 
         <main>
-            <div class="checks-section">
-                <h2>今日の脳筋チェック</h2>
-                
-                <form id="checkForm" method="POST" action="{{ url_for('check') }}">
-                    <div class="check-item">
-                        <label>
-                            <input type="checkbox" 
-                                   id="exercise"
-                                   value="exercise"
-                                   {% if checks.exercise %}checked{% endif %}
-                                   onchange="updateAllChecks()">
-                            <div class="check-text-wrapper">
-                                <span class="check-label">運動しましたか？</span>
-                                <span class="check-subtitle">（まずは5分の運動から始めよう！）</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="check-item">
-                        <label>
-                            <input type="checkbox" 
-                                   id="study"
-                                   value="study"
-                                   {% if checks.study %}checked{% endif %}
-                                   onchange="updateAllChecks()">
-                            <div class="check-text-wrapper">
-                                <span class="check-label">脳を鍛えましたか(勉強しましたか？)</span>
-                                <span class="check-subtitle">（読書でも勉強でもまずは5分から始めよう！）</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="check-item">
-                        <label>
-                            <input type="checkbox" 
-                                   id="challenge"
-                                   value="challenge"
-                                   {% if checks.challenge %}checked{% endif %}
-                                   onchange="updateAllChecks()">
-                            <div class="check-text-wrapper">
-                                <span class="check-label">何か新しいことに挑戦していますか？</span>
-                                <span class="check-subtitle">（目標達成に向けた努力なら、何でもOK）</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="check-item">
-                        <label>
-                            <input type="checkbox" 
-                                   id="smile"
-                                   value="smile"
-                                   {% if checks.smile %}checked{% endif %}
-                                   onchange="updateAllChecks()">
-                            <div class="check-text-wrapper">
-                                <span class="check-label">周りを笑顔にするようにしていますか？</span>
-                                <span class="check-subtitle">（挨拶、ありがとう、優しい言葉など）ユーモアを発揮するのもOK！</span>
-                            </div>
-                        </label>
-                    </div>
-                </form>
+            <div class="progress-container">
+                <div class="progress-bar" id="muscleGauge">0%</div>
             </div>
 
-            <div class="result-section">
-                {% if count == 4 %}
-                    <div class="result result-max">
-                        <h2>最強！今日のあなたは無敵の脳筋だ！</h2>
-                        <p>筋肉も脳も絶好調！。周りまで元気にしてるぞ！</p>
-                        <div class="count-badge">4/4</div>
-                    </div>
-                {% elif count == 3 %}
-                    <div class="result result-good">
-                        <h2>あと一歩！ほぼ最強の脳筋だ！</h2>
-                        <p>明日はコンプリートして最強の脳筋になろう！</p>
-                        <div class="count-badge">3/4</div>
-                    </div>
-                {% elif count == 2 %}
-                    <div class="result result-ok">
-                        <h2>半分クリア！十分ナイス脳筋！</h2>
-                        <p>だが…まだ眠れる力があるはずだ。<br>明日はもう1つだけ増やしてみよう！</p>
-                        <div class="count-badge">2/4</div>
-                    </div>
-                {% elif count == 1 %}
-                    <div class="result result-min">
-                        <h2>今日はちょっと休憩日？それもOK！</h2>
-                        <p>だが、脳筋は常に君の味方。<br>明日は1つでいい、必ず積み上げよう！</p>
-                        <div class="count-badge">1/4</div>
-                    </div>
-                {% else %}
-                    <div class="result result-min">
-                        <h2>今日はまだまだこれから！</h2>
-                        <h2>筋肉を脳を鍛えてパワーアップだ！</h2>
-                        <p>最初の一歩を踏み出そう！<br>1つでもいい、今日から始めよう！</p>
-                        <div class="count-badge">0/4</div>
-                    </div>
-                {% endif %}
+            <form id="checkForm">
+                <div class="check-grid">
+                    <label class="check-card">
+                        <input type="checkbox" name="exercise" value="true" 
+                               {% if checks.exercise %}checked{% endif %} onchange="handleCheck()">
+                        <span class="check-title"> 運動しましたか？</span>
+                        <span class="check-sub">まずは5分の運動から！スクワットでもOK！</span>
+                    </label>
+
+                    <label class="check-card">
+                        <input type="checkbox" name="study" value="true" 
+                               {% if checks.study %}checked{% endif %} onchange="handleCheck()">
+                        <span class="check-title"> 脳を鍛えましたか？</span>
+                        <span class="check-sub">読書・勉強、5分で昨日の自分を超えろ！</span>
+                    </label>
+
+                    <label class="check-card">
+                        <input type="checkbox" name="challenge" value="true" 
+                               {% if checks.challenge %}checked{% endif %} onchange="handleCheck()">
+                        <span class="check-title"> 新しい挑戦をしましたか？</span>
+                        <span class="check-sub">新しい挑戦にワクワクしよう！</span>
+                    </label>
+
+                    <label class="check-card">
+                        <input type="checkbox" name="smile" value="true" 
+                               {% if checks.smile %}checked{% endif %} onchange="handleCheck()">
+                        <span class="check-title"> 周りを笑顔にしましたか？</span>
+                        <span class="check-sub">挨拶、感謝、ユーモア！筋肉と笑顔が最強の武器！</span>
+                    </label>
+                </div>
+            </form>
+
+            <div id="dynamicMessage" class="result-section">
+                <h2 id="msgTitle"></h2>
+                <p id="msgBody"></p>
             </div>
 
             <div class="book-link-section">
-                <p class="book-link-text">最強の脳筋になるためのバイブルはこちら</p>
-                <a href="https://amzn.asia/d/dixGHZO" target="_blank" rel="noopener noreferrer" class="book-image-link">
-                    <img src="{{ url_for('static', filename='表紙.png') }}" 
-                         alt="脳筋 人生を変える無敵の生き方" 
-                         class="book-cover-image">
+                <p style="font-weight:bold;">＼最強のバイブル／</p>
+                <a href="https://amzn.asia/d/dixGHZO" target="_blank">
+                    <img src="{{ url_for('static', filename='表紙.png') }}" alt="脳筋本" class="book-cover-image">
                 </a>
-                <a href="https://amzn.asia/d/dixGHZO" target="_blank" rel="noopener noreferrer" class="book-link-button">書籍を見る</a>
             </div>
         </main>
     </div>
 
+    <div id="saveStatus">保存完了</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
     <script>
-        function updateAllChecks() {
+        document.addEventListener('DOMContentLoaded', updateUI);
+
+        // チェック時にUI更新と保存を同時に行う関数
+        function handleCheck() {
+            updateUI();      // 見た目の更新（即時）
+            autoSave();      // 裏側でサーバーに送信
+        }
+
+        function updateUI() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+            const percentage = (checkedCount / total) * 100;
+
+            // ゲージ更新
+            const gauge = document.getElementById('muscleGauge');
+            gauge.style.width = percentage + '%';
+            gauge.textContent = `脳筋パワー ${Math.round(percentage)}%`;
+
+            // メッセージ更新
+            const msgArea = document.getElementById('dynamicMessage');
+            const msgTitle = document.getElementById('msgTitle');
+            const msgBody = document.getElementById('msgBody');
+
+            let title, body;
+
+            if (checkedCount > 0) {
+                msgArea.classList.add('active');
+            } else {
+                msgArea.classList.remove('active');
+            }
+
+            // テキスト分岐
+            switch(checkedCount) {
+                case 4:
+                    title = "最強！今日のあなたは無敵だ！";
+                    body = "筋肉も脳も絶好調！君の筋肉で世界が明るくなる！";
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    break;
+                case 3:
+                    title = "あと一歩！ほぼ最強の脳筋だ！";
+                    body = "素晴らしい成果だ！明日は完全制覇を狙おう！";
+                    break;
+                case 2:
+                    title = "半分クリア！十分ナイス脳筋！";
+                    body = "継続こそ力なり。君のポテンシャルはまだまだこんなもんじゃない！";
+                    break;
+                case 1:
+                    title = "最初の一歩！それが一番大事！";
+                    body = "0と1の差は無限大。今日動いた自分を褒めちぎれ！";
+                    break;
+                default:
+                    title = ""; body = "";
+            }
+
+            if (checkedCount > 0) {
+                msgTitle.textContent = title;
+                msgBody.textContent = body;
+            }
+        }
+
+        // 【重要】自動保存機能
+        function autoSave() {
             const form = document.getElementById('checkForm');
+            const formData = new FormData(form);
             
-            // 既存のhidden inputを削除
-            const existingInputs = form.querySelectorAll('input[type="hidden"]');
-            existingInputs.forEach(input => input.remove());
-            
-            // すべてのチェックボックスの状態を送信
-            const checkboxes = ['exercise', 'study', 'challenge', 'smile'];
-            checkboxes.forEach(type => {
-                const checkbox = document.getElementById(type);
-                if (checkbox) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = type;
-                    input.value = checkbox.checked ? 'true' : 'false';
-                    form.appendChild(input);
+            // ステータス表示
+            const status = document.getElementById('saveStatus');
+            status.textContent = "保存中...";
+            status.style.opacity = 1;
+
+            // Flaskサーバーへ非同期送信
+            fetch("{{ url_for('check') }}", {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    status.textContent = "保存完了💪";
+                    setTimeout(() => { status.style.opacity = 0; }, 1500);
+                } else {
+                    status.textContent = "保存失敗...";
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                status.textContent = "通信エラー";
             });
-            
-            form.submit();
         }
     </script>
 </body>
 </html>
-

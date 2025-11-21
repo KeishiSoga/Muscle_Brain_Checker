@@ -141,16 +141,6 @@
         }
 
 
-        /* 保存中インジケーター（右下に小さく出す） */
-        #saveStatus {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 0.8rem;
-            color: #888;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
 
         .book-link-section {
             margin-top: 40px;
@@ -181,29 +171,25 @@
             <form id="checkForm">
                 <div class="check-grid">
                     <label class="check-card">
-                        <input type="checkbox" name="exercise" value="true" 
-                               {% if checks.exercise %}checked{% endif %} onchange="handleCheck()">
+                        <input type="checkbox" name="exercise" value="true" onchange="updateUI()">
                         <span class="check-title"> 運動しましたか？</span>
                         <span class="check-sub">まずは5分の運動から！スクワットでもOK！</span>
                     </label>
 
                     <label class="check-card">
-                        <input type="checkbox" name="study" value="true" 
-                               {% if checks.study %}checked{% endif %} onchange="handleCheck()">
+                        <input type="checkbox" name="study" value="true" onchange="updateUI()">
                         <span class="check-title"> 脳を鍛えましたか？</span>
                         <span class="check-sub">読書・勉強、5分で昨日の自分を超えろ！</span>
                     </label>
 
                     <label class="check-card">
-                        <input type="checkbox" name="challenge" value="true" 
-                               {% if checks.challenge %}checked{% endif %} onchange="handleCheck()">
+                        <input type="checkbox" name="challenge" value="true" onchange="updateUI()">
                         <span class="check-title"> 新しい挑戦をしましたか？</span>
                         <span class="check-sub">新しい挑戦にワクワクしよう！</span>
                     </label>
 
                     <label class="check-card">
-                        <input type="checkbox" name="smile" value="true" 
-                               {% if checks.smile %}checked{% endif %} onchange="handleCheck()">
+                        <input type="checkbox" name="smile" value="true" onchange="updateUI()">
                         <span class="check-title"> 周りを笑顔にしましたか？</span>
                         <span class="check-sub">挨拶、感謝、ユーモア！筋肉と笑顔が最強の武器！</span>
                     </label>
@@ -224,18 +210,10 @@
         </main>
     </div>
 
-    <div id="saveStatus">保存完了</div>
-
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', updateUI);
-
-        // チェック時にUI更新と保存を同時に行う関数
-        function handleCheck() {
-            updateUI();      // 見た目の更新（即時）
-            autoSave();      // 裏側でサーバーに送信
-        }
 
         function updateUI() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -288,35 +266,6 @@
                 msgTitle.textContent = title;
                 msgBody.textContent = body;
             }
-        }
-
-        // 【重要】自動保存機能
-        function autoSave() {
-            const form = document.getElementById('checkForm');
-            const formData = new FormData(form);
-            
-            // ステータス表示
-            const status = document.getElementById('saveStatus');
-            status.textContent = "保存中...";
-            status.style.opacity = 1;
-
-            // Flaskサーバーへ非同期送信
-            fetch("{{ url_for('check') }}", {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    status.textContent = "保存完了💪";
-                    setTimeout(() => { status.style.opacity = 0; }, 1500);
-                } else {
-                    status.textContent = "保存失敗...";
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                status.textContent = "通信エラー";
-            });
         }
     </script>
 </body>

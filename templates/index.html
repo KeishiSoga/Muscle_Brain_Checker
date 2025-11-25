@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>脳筋最強習慣アプリ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* スタイルは前回と同じものをベースに、保存ボタン関連を削除 */
         :root {
@@ -22,6 +22,25 @@
             color: #333;
             text-align: center;
             padding-bottom: 50px;
+            transition: background-color 0.5s ease;
+        }
+
+        /* 画面振動アニメーション */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-2px, -2px); }
+            20% { transform: translate(2px, 2px); }
+            30% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            50% { transform: translate(-1px, -1px); }
+            60% { transform: translate(1px, 1px); }
+            70% { transform: translate(-1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            90% { transform: translate(0, 0); }
+        }
+
+        body.shake {
+            animation: shake 0.3s ease;
         }
 
         .container {
@@ -31,18 +50,24 @@
         }
 
         .catchphrase {
-            font-family: 'Mochiy Pop One', sans-serif;
+            font-family: 'Noto Serif JP', serif;
             color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            font-weight: 400;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+        }
+
+        .subtitle {
+            font-family: 'Noto Sans JP', sans-serif;
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 30px;
+            font-weight: 700;
             letter-spacing: 0.05em;
-            text-shadow: 
-                3px 3px 0px #fff,
-                5px 5px 0px rgba(255, 75, 75, 0.3),
-                0 0 20px rgba(255, 75, 75, 0.5);
-            line-height: 1.4;
-            transform: perspective(500px) rotateX(2deg);
+            line-height: 1.6;
         }
 
         .progress-container {
@@ -68,6 +93,59 @@
             color: white;
             font-weight: bold;
             font-size: 0.9rem;
+            position: relative;
+            overflow: visible;
+        }
+
+        /* パンプアップアニメーション */
+        @keyframes pump {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.15); }
+        }
+
+        .progress-bar.pumping {
+            animation: pump 0.5s ease infinite;
+        }
+
+        /* 100%時の金色エフェクト */
+        .progress-bar.golden {
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+            background-size: 200% 100%;
+            animation: goldenShine 1.5s ease infinite, pump 0.5s ease infinite;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6);
+        }
+
+        @keyframes goldenShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 炎のエフェクト */
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .progress-bar.golden::before {
+            opacity: 1;
+            animation: flame 0.6s ease infinite;
+        }
+
+        @keyframes flame {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+            25% { transform: scale(1.1) rotate(-2deg); opacity: 0.7; }
+            50% { transform: scale(1.05) rotate(2deg); opacity: 0.6; }
+            75% { transform: scale(1.1) rotate(-1deg); opacity: 0.7; }
         }
 
         .check-grid {
@@ -155,12 +233,71 @@
         .book-cover-image:hover {
             transform: rotate(-2deg) scale(1.05);
         }
+
+        /* シェアボタン */
+        .share-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, #1DA1F2, #0d8bd9);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(29, 161, 242, 0.3);
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(29, 161, 242, 0.5);
+            background: linear-gradient(135deg, #0d8bd9, #1DA1F2);
+        }
+
+        .share-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 飛び出すテキストエフェクト */
+        .popup-text {
+            position: fixed;
+            pointer-events: none;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            z-index: 10000;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: popupFly 1s ease-out forwards;
+        }
+
+        @keyframes popupFly {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, calc(-50% - 50px)) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, calc(-50% - 100px)) scale(0.8);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1 class="catchphrase">身体を鍛え、脳を鍛え、<br>周りを笑顔にする。<br>"脳筋最強"の新習慣。</h1>
+            <h1 class="catchphrase">脳筋最強の新習慣</h1>
+            <p class="subtitle">現状維持は退化だ！昨日よりも成長しよう！</p>
         </header>
 
         <main>
@@ -170,28 +307,34 @@
 
             <form id="checkForm">
                 <div class="check-grid">
-                    <label class="check-card">
+                    <label class="check-card" onclick="handleCardClick(event)">
                         <input type="checkbox" name="exercise" value="true" onchange="updateUI()">
                         <span class="check-title"> 運動しましたか？</span>
                         <span class="check-sub">まずは5分の運動から！スクワットでもOK！</span>
                     </label>
 
-                    <label class="check-card">
+                    <label class="check-card" onclick="handleCardClick(event)">
                         <input type="checkbox" name="study" value="true" onchange="updateUI()">
                         <span class="check-title"> 脳を鍛えましたか？</span>
                         <span class="check-sub">読書・勉強、5分で昨日の自分を超えろ！</span>
                     </label>
 
-                    <label class="check-card">
+                    <label class="check-card" onclick="handleCardClick(event)">
                         <input type="checkbox" name="challenge" value="true" onchange="updateUI()">
                         <span class="check-title"> 新しい挑戦をしましたか？</span>
                         <span class="check-sub">新しい挑戦にワクワクしよう！</span>
                     </label>
 
-                    <label class="check-card">
+                    <label class="check-card" onclick="handleCardClick(event)">
                         <input type="checkbox" name="smile" value="true" onchange="updateUI()">
                         <span class="check-title"> 周りを笑顔にしましたか？</span>
                         <span class="check-sub">挨拶、感謝、ユーモア！筋肉と笑顔が最強の武器！</span>
+                    </label>
+
+                    <label class="check-card" onclick="handleCardClick(event)">
+                        <input type="checkbox" name="criticism" value="true" onchange="updateUI()">
+                        <span class="check-title"> 批判を左から右に受け流しましたか？</span>
+                        <span class="check-sub">ネガティブな言葉は聞き流して、自分の道を進め！筋肉は前進する！</span>
                     </label>
                 </div>
             </form>
@@ -199,6 +342,12 @@
             <div id="dynamicMessage" class="result-section">
                 <h2 id="msgTitle"></h2>
                 <p id="msgBody"></p>
+            </div>
+
+            <div class="share-section" style="display: none;" id="shareSection">
+                <button onclick="shareToX()" class="share-btn">
+                    筋肉と脳の成長をXで叫ぶ 📢
+                </button>
             </div>
 
             <div class="book-link-section">
@@ -215,6 +364,58 @@
     <script>
         document.addEventListener('DOMContentLoaded', updateUI);
 
+        // 飛び出すテキストの配列
+        const popupTexts = ['NICE BULK!', 'LIGHT WEIGHT!', 'YEAH!', '💪', 'POWER UP!', 'BEAST MODE!'];
+
+        // カードクリック時の処理（エフェクト用）
+        function handleCardClick(event) {
+            // 画面振動
+            document.body.classList.add('shake');
+            setTimeout(() => {
+                document.body.classList.remove('shake');
+            }, 300);
+
+            // カーソル位置に飛び出すテキスト
+            const popupText = popupTexts[Math.floor(Math.random() * popupTexts.length)];
+            createPopupText(event.clientX, event.clientY, popupText);
+        }
+
+        // 飛び出すテキストを作成
+        function createPopupText(x, y, text) {
+            const popup = document.createElement('div');
+            popup.className = 'popup-text';
+            popup.textContent = text;
+            popup.style.left = x + 'px';
+            popup.style.top = y + 'px';
+            popup.style.transform = 'translate(-50%, -50%)';
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.remove();
+            }, 1000);
+        }
+
+        // 背景色を達成度に応じて変更
+        function updateBackgroundColor(percentage) {
+            const body = document.body;
+            if (percentage === 100) {
+                // 100%: ゴールド（スーパーサイヤ人風）
+                body.style.backgroundColor = '#FFE5B4';
+            } else if (percentage >= 80) {
+                // 80%以上: 濃い赤（血流アップ）
+                body.style.backgroundColor = '#FFE0E0';
+            } else if (percentage >= 60) {
+                // 60%以上: やや濃いピンク
+                body.style.backgroundColor = '#FFEBEB';
+            } else if (percentage >= 40) {
+                // 40%以上: 中程度のピンク
+                body.style.backgroundColor = '#FFF0F0';
+            } else {
+                // 40%未満: 薄いピンク（デフォルト）
+                body.style.backgroundColor = '#FFF5F5';
+            }
+        }
+
         function updateUI() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
             const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
@@ -225,6 +426,31 @@
             const gauge = document.getElementById('muscleGauge');
             gauge.style.width = percentage + '%';
             gauge.textContent = `脳筋パワー ${Math.round(percentage)}%`;
+
+            // パンプアップアニメーション
+            if (percentage > 0 && percentage < 100) {
+                gauge.classList.add('pumping');
+            } else {
+                gauge.classList.remove('pumping');
+            }
+
+            // 100%時の金色エフェクト
+            if (percentage === 100) {
+                gauge.classList.add('golden');
+            } else {
+                gauge.classList.remove('golden');
+            }
+
+            // 背景色更新
+            updateBackgroundColor(percentage);
+
+            // シェアセクションの表示制御（達成度が高い時のみ表示）
+            const shareSection = document.getElementById('shareSection');
+            if (percentage >= 80 || checkedCount >= 4) {
+                shareSection.style.display = 'block';
+            } else {
+                shareSection.style.display = 'none';
+            }
 
             // メッセージ更新
             const msgArea = document.getElementById('dynamicMessage');
@@ -241,6 +467,11 @@
 
             // テキスト分岐
             switch(checkedCount) {
+                case 5:
+                    title = "完全制覇！最強の脳筋マスター！";
+                    body = "全てをクリアした！君は真の脳筋戦士だ！世界が君の筋肉に震える！";
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                    break;
                 case 4:
                     title = "最強！今日のあなたは無敵だ！";
                     body = "筋肉も脳も絶好調！君の筋肉で世界が明るくなる！";
@@ -266,6 +497,29 @@
                 msgTitle.textContent = title;
                 msgBody.textContent = body;
             }
+        }
+
+        // X（旧Twitter）へのシェア機能
+        function shareToX() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+            const percentage = Math.round((checkedCount / total) * 100);
+
+            let shareText = '';
+            if (percentage === 100) {
+                shareText = '完全制覇！今日は脳筋パワー100%達成！💪\n\n#脳筋最強 #習慣化 #成長';
+            } else if (percentage >= 80) {
+                shareText = `脳筋パワー${percentage}%達成！あと少しで完全制覇だ！💪\n\n#脳筋最強 #習慣化 #成長`;
+            } else {
+                shareText = `今日も脳筋パワー${percentage}%達成！継続は力なり！💪\n\n#脳筋最強 #習慣化 #成長`;
+            }
+
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent(shareText);
+            const shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            
+            window.open(shareUrl, '_blank', 'width=550,height=420');
         }
     </script>
 </body>
